@@ -16,7 +16,7 @@ app.post('/message', (req, res) => {
   res.send('Message received!');
 });
 
-app.use('/proxy', createProxyMiddleware({
+app.use('/', createProxyMiddleware({
   target: 'https://api.openai.com',
   changeOrigin: true,
   onProxyReq: (proxyReq, req, res) => {
