@@ -2,7 +2,7 @@ const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express()
 
-app.get('/hello', (req, res) => {
+app.use('/hello', (req, res) => {
   res.send('欢迎来到我的网站！');
 });
 
