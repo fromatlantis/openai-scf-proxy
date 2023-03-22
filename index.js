@@ -5,11 +5,11 @@ const {
 const app = express()
 const port = 9000
 
-app.get('/hello', (req, res) => {
+app.get('/', (req, res) => {
   res.send('欢迎来到我的网站！');
 });
 
-app.use('/', createProxyMiddleware({
+app.use('/proxy', createProxyMiddleware({
   target: 'https://api.openai.com',
   changeOrigin: true,
   onProxyReq: (proxyReq, req, res) => {
