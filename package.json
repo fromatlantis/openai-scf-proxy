@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "build": "node app.js"
   },
   "dependencies": {
     "@vercel/node": "^2.9.13",
