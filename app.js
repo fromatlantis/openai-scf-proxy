@@ -1,18 +1,17 @@
-const express = require('express')
-const { createProxyMiddleware } = require('http-proxy-middleware');
-const app = express()
+// Import packages
+const express = require("express");
+//const home = require("./routes/home");
 
-app.use('/hello', (req, res) => {
+// Middlewares
+const app = express();
+
+
+// Routes
+//app.use("/home", home);
+
+app.get('/', (req, res) => {
   res.send('欢迎来到我的网站！');
 });
-
-// app.use('/', createProxyMiddleware({
-//   target: 'https://api.openai.com',
-//   changeOrigin: true,
-//   onProxyRes: function (proxyRes, req, res) {
-//     proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-//   }
-// }));
 
 // connection
 const port = process.env.PORT || 9001;
