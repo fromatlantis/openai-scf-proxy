@@ -6,6 +6,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "@vercel/node": "^2.9.13",
     "express": "~4.16.1",
     "http-proxy-middleware": "^2.0.6"
   }
