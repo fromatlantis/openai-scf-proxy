@@ -5,7 +5,7 @@ const {
 const app = express()
 const port = 9000
 
-app.get('/', (req, res) => {
+app.get('/hello', (req, res) => {
   res.send('欢迎来到我的网站！');
 });
 
