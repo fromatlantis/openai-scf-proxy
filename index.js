@@ -9,6 +9,11 @@ app.get('/', (req, res) => {
   res.send('欢迎来到我的网站！');
 });
 
+app.post('/message', (req, res) => {
+  console.log(req.body.message);
+  res.send('Message received!');
+});
+
 app.use('/proxy', createProxyMiddleware({
   target: 'https://api.openai.com',
   changeOrigin: true,
