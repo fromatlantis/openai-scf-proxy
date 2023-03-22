@@ -9,7 +9,7 @@ const port = 9000
 //   res.send('欢迎来到我的网站！');
 // });
 
-app.use('/proxy', createProxyMiddleware({
+app.use('/', createProxyMiddleware({
   target: 'https://api.openai.com',
   changeOrigin: true,
   onProxyReq: (proxyReq, req, res) => {
