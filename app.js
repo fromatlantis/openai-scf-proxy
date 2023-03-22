@@ -2,8 +2,8 @@ const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express()
 
-app.use('/hello', (ctx, next) => {
-  ctx.body = 'Hello World!';
+app.get('/hello', (req, res) => {
+  res.send('欢迎来到我的网站！');
 });
 
 // app.use('/', createProxyMiddleware({
