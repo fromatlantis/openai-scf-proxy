@@ -5,12 +5,12 @@ const {
 const app = express()
 const port = 9000
 
-app.get('/hello', (req, res) => {
+app.get('/', (req, res) => {
   res.send('欢迎来到我的网站！');
 });
 
-app.post('/message', (req, res) => {
-  console.log(req.body.message);
+app.get('/message', (req, res) => {
+//  console.log(req.body.message);
   res.send('Message received!');
 });
 
