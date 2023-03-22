@@ -3,6 +3,8 @@ const {
   createProxyMiddleware
 } = require('http-proxy-middleware');
 const app = express()
+app.use(express.json())
+
 const port = 9000
 
 app.get('/', (req, res) => {
