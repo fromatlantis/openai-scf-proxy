@@ -1,10 +1,7 @@
 const express = require('express')
-const {
-  createProxyMiddleware
-} = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express()
 const port = 9000
-
 
 app.get('/hello', (ctx, next) => {
   ctx.body = 'Hello World!';
