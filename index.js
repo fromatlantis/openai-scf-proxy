@@ -26,9 +26,7 @@ const limiter = rateLimit({
 // Parse request bodies as JSON
 app.use(bodyParser.json());
 app.use(limiter)
-app.use(cors({
-  origin: config.cors_origin
-}));
+app.use(cors());
 
 
 app.post('/prompt', async (req, res) => {
