@@ -79,7 +79,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                 }
             },
         });
-        stream.pipe(res);
+        res.send(stream);
     } catch (error) {
       res.status(500).send(error.message);
     }
