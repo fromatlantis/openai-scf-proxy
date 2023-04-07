@@ -12,6 +12,7 @@
     "body-parser": "*",
     "express-rate-limit": "*",
     "cors": "*",
-    "http-proxy-middleware": "*"
+    "http-proxy-middleware": "*",
+    "eventsource-parser": "*"
   }
 }
