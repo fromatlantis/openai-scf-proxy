@@ -54,6 +54,8 @@ app.post('/v1/chat/completions', async (req, res) => {
       // Response
       // res.send('Hello world!\n');
 //       res.setHeader('Content-Type', 'application/json');
+       const encoder = new TextEncoder();
+        const decoder = new TextDecoder();
         const stream = new ReadableStream({
             async start(controller) {
                 const streamParser = (event) => {
