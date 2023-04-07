@@ -16,8 +16,8 @@ const openaiConfig = new Configuration({
 const openaiClient = new OpenAIApi(openaiConfig);
 
 const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 5000, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  windowMs: 60 * 60 * 1000, // 5 minutes
+  max: 3, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
@@ -25,18 +25,16 @@ const limiter = rateLimit({
 
 // Parse request bodies as JSON
 app.use(bodyParser.json());
-// app.use(limiter)
-// app.use(cors());
+app.use(limiter)
+app.use(cors());
 
 app.post('/v1/chat/completions', async (req, res) => {
     try {
-      console.log(req.body)
       const openaiRes = await openaiClient.createChatCompletion(req.body);
       // console.log(openaiRes.data.choices[0]);
       // Response
       // res.send('Hello world!\n');
 //       res.setHeader('Content-Type', 'application/json');
-      console.log(openaiRes);
       res.send(openaiRes);
     } catch (error) {
       res.status(500).send(error.message);
