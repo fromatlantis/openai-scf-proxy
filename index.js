@@ -54,10 +54,25 @@ app.post('/v1/chat/completions', async (req, res) => {
       // Response
       // res.send('Hello world!\n');
 //       res.setHeader('Content-Type', 'application/json');
-         for await (const chunk of openaiRes.data) {
-              res.write(chunk);
-              res.end();
+//          for await (const chunk of openaiRes.data) {
+//               res.write(chunk);
+//               res.end();
+//         }
+      openaiRes.data.on('data', data => {
+        const lines = data.toString().split('\n').filter(line => line.trim() !== '');
+        for (const line of lines) {
+            const message = line.replace(/^data: /, '');
+            if (message === '[DONE]') {
+                res.end();
+            }
+            try {
+                const parsed = JSON.parse(message);
+                res.write(message)
+            } catch(error) {
+                console.error('Could not JSON parse stream message', message, error);
+            }
         }
+    });
     } catch (error) {
       res.status(500).send(error.message);
     }
