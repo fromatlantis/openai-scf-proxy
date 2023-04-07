@@ -38,8 +38,14 @@ app.post('/v1/chat/completions', async (req, res) => {
         res.setHeader('Content-Type', 'application/octet-stream');
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
-        res.write(openaiRes);
-      res.end();
+        
+      for await (const message of openaiRes.data) {
+          try {
+              res.send(message)
+          } catch (error) {
+            console.error("Could not JSON parse stream message", message, error);
+          }
+      }
     } catch (error) {
       res.status(500).send(error.message);
     }
