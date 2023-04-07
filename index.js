@@ -74,12 +74,13 @@ app.post('/v1/chat/completions', async (req, res) => {
                     }
                 };
                 const parser = createParser(streamParser);
-                for await (const chunk of res.body) {
+                for await (const chunk of openaiRes.body) {
                     parser.feed(decoder.decode(chunk));
                 }
             },
         });
-        res.send(stream);
+        res.write(stream);
+      res.end;
     } catch (error) {
       res.status(500).send(error.message);
     }
