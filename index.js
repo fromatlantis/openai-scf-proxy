@@ -66,8 +66,8 @@ app.post('/v1/chat/completions', async (req, res) => {
             method: 'POST',
             body: JSON.stringify({
                 model: 'gpt-3.5-turbo',
-                messages,
-                temperature,
+                messages: 'hello',
+                temperature: 0.5,
                 // max_tokens: 4096 - tokens,
                 stream: true,
             }),
