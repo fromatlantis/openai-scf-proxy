@@ -66,7 +66,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                 res.end();
             }
             try {
-                const parsed = JSON.parse(message);
+                //const parsed = JSON.parse(message);
                 res.write(message)
             } catch(error) {
                 console.error('Could not JSON parse stream message', message, error);
