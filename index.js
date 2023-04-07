@@ -56,7 +56,7 @@ app.post('/v1/chat/completions', async (req, res) => {
 //       res.setHeader('Content-Type', 'application/json');
         const stream = new ReadableStream({
             async start(controller) {
-                const streamParser = (event: ParsedEvent | ReconnectInterval) => {
+                const streamParser = (event) => {
                     if (event.type === 'event') {
                         const data = event.data;
                         if (data === '[DONE]') {
@@ -74,7 +74,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                     }
                 };
                 const parser = createParser(streamParser);
-                for await (const chunk of res.body as any) {
+                for await (const chunk of res.body) {
                     parser.feed(decoder.decode(chunk));
                 }
             },
