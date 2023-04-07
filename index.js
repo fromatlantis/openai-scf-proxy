@@ -38,11 +38,8 @@ app.post('/v1/chat/completions', async (req, res) => {
         res.setHeader('Content-Type', 'application/octet-stream');
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
-      openaiRes.data.on('data', (data) => {
-        for(const chunk of data) {
-            res.write(data);
-        }
-        res.end();
+      openaiRes.on('data', (data) => {
+        res.send(data)
       })
     } catch (error) {
       res.status(500).send(error.message);
