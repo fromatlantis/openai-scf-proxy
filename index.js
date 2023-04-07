@@ -40,7 +40,7 @@ app.post('/v1/chat/completions', async (req, res) => {
         res.setHeader('Connection', 'keep-alive');
       openaiRes.data.on('data', (data) => {
         console.log(data)
-           res.write(data);
+           res.send(data);
       })
     } catch (error) {
       res.status(500).send(error.message);
