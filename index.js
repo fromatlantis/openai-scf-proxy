@@ -28,6 +28,18 @@ app.use(bodyParser.json());
 app.use(limiter)
 app.use(cors());
 
+app.post('v1/chat/completions', async (req, res) => {
+    try {
+      const openaiRes = await openaiClient.createChatCompletion(res.body);
+      // console.log(openaiRes.data.choices[0]);
+      // Response
+      // res.send('Hello world!\n');
+      res.setHeader('Content-Type', 'application/json');
+      res.send(response);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+});
 
 app.post('/prompt', async (req, res) => {
 
