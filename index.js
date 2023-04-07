@@ -35,12 +35,12 @@ app.post('/v1/chat/completions', async (req, res) => {
       // Response
       // res.send('Hello world!\n');
 //       res.setHeader('Content-Type', 'application/json');
-//         res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
       openaiRes.data.on('data', (data) => {
         console.log(data)
-           res.send(data);
+           res.write(data);
       })
     } catch (error) {
       res.status(500).send(error.message);
