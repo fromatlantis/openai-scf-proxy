@@ -35,7 +35,8 @@ app.post('/v1/chat/completions', async (req, res) => {
       // console.log(openaiRes.data.choices[0]);
       // Response
       // res.send('Hello world!\n');
-      res.setHeader('Content-Type', 'application/json');
+//       res.setHeader('Content-Type', 'application/json');
+      console.log(openaiRes);
       res.send(openaiRes);
     } catch (error) {
       res.status(500).send(error.message);
