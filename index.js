@@ -76,7 +76,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                     }
                 };
                 const parser = createParser(streamParser);
-                for await (const chunk of openaiRes.body) {
+                for await (const chunk of openaiRes.data) {
                     parser.feed(decoder.decode(chunk));
                 }
             },
