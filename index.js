@@ -30,7 +30,7 @@ app.use(cors());
 
 app.post('/v1/chat/completions', async (req, res) => {
     try {
-      const openaiRes = await openaiClient.createChatCompletion(req.body);
+      const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
       // console.log(openaiRes.data.choices[0]);
       // Response
       // res.send('Hello world!\n');
