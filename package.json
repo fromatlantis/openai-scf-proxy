@@ -11,6 +11,7 @@
     "openai": "*",
     "body-parser": "*",
     "express-rate-limit": "*",
-    "cors": "*"
+    "cors": "*",
+    "http-proxy-middleware": "*"
   }
 }
