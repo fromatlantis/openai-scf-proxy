@@ -57,23 +57,31 @@ app.post('/v1/chat/completions', async (req, res) => {
 //          for await (const chunk of openaiRes.data) {
 //               res.write(chunk);
 //               res.end();
-//         }
-      openaiRes.data.on('data', data => {
-        const lines = data.toString().split('\n').filter(line => line.trim() !== '');
-        res.send(lines)
-//         for (const line of lines) {
-//             const message = line.replace(/^data: /, '');
-//             if (message === '[DONE]') {
-//                 //res.end();
-//             }
-//             try {
-//                 //const parsed = JSON.parse(message);
-//                 res.write(message)
-//             } catch(error) {
-//                 console.error('Could not JSON parse stream message', message, error);
-//             }
-//         }
-    });
+//         }  
+       const resf = await fetch(`https://api.openai.com/v1/chat/completions`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${apiKey}`,
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                model: 'gpt-3.5-turbo',
+                messages,
+                temperature,
+                // max_tokens: 4096 - tokens,
+                stream: true,
+            }),
+        }).catch((err) => {
+            return new Response(
+                JSON.stringify({
+                    error: {
+                        message: err.message,
+                    },
+                }),
+                { status: 500 },
+            );
+        });
+      res.send(resf);
     } catch (error) {
       res.status(500).send(error.message);
     }
