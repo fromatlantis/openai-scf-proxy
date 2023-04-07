@@ -81,7 +81,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                 { status: 500 },
             );
         });
-      res.send(resf);
+        resf.pipe(res)
     } catch (error) {
       res.status(500).send(error.message);
     }
