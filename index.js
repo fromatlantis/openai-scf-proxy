@@ -6,6 +6,9 @@ const {
   createProxyMiddleware
 } = require('http-proxy-middleware');
 const rateLimit = require('express-rate-limit');
+
+const { createParser } =  require('eventsource-parser');
+
 const cors = require('cors');
 
 
@@ -27,45 +30,60 @@ const limiter = rateLimit({
 
 
 // Parse request bodies as JSON
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 // app.use(limiter)
 //app.use(cors());
 
-app.use('/', createProxyMiddleware({
-  target: 'https://api.openai.com',
-  changeOrigin: true,
-  onProxyReq: (proxyReq, req, res) => {
-    // 移除 'x-forwarded-for' 和 'x-real-ip' 头，以确保不传递原始客户端 IP 地址等信息
-    proxyReq.removeHeader('x-forwarded-for');
-    proxyReq.removeHeader('x-real-ip');
-  },
-  onProxyRes: function (proxyRes, req, res) {
-    proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-  }
-}));
+// app.use('/', createProxyMiddleware({
+//   target: 'https://api.openai.com',
+//   changeOrigin: true,
+//   onProxyReq: (proxyReq, req, res) => {
+//     // 移除 'x-forwarded-for' 和 'x-real-ip' 头，以确保不传递原始客户端 IP 地址等信息
+//     proxyReq.removeHeader('x-forwarded-for');
+//     proxyReq.removeHeader('x-real-ip');
+//   },
+//   onProxyRes: function (proxyRes, req, res) {
+//     proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+//   }
+// }));
 
-// app.post('/v1/chat/completions', async (req, res) => {
-//     try {
-//       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
-//       // console.log(openaiRes.data.choices[0]);
-//       // Response
-//       // res.send('Hello world!\n');
-// //       res.setHeader('Content-Type', 'application/json');
-//         res.setHeader('Content-Type', 'application/octet-stream');
-//         res.setHeader('Cache-Control', 'no-cache');
-//         res.setHeader('Connection', 'keep-alive');
-        
-//       for await (const message of openaiRes.data) {
-//           try {
-//               res.send(message)
-//           } catch (error) {
-//             console.error("Could not JSON parse stream message", message, error);
-//           }
-//       }
-//     } catch (error) {
-//       res.status(500).send(error.message);
-//     }
-// });
+app.post('/v1/chat/completions', async (req, res) => {
+    try {
+      const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
+      // console.log(openaiRes.data.choices[0]);
+      // Response
+      // res.send('Hello world!\n');
+//       res.setHeader('Content-Type', 'application/json');
+        const stream = new ReadableStream({
+            async start(controller) {
+                const streamParser = (event: ParsedEvent | ReconnectInterval) => {
+                    if (event.type === 'event') {
+                        const data = event.data;
+                        if (data === '[DONE]') {
+                            controller.close();
+                            return;
+                        }
+                        try {
+                            const json = JSON.parse(data);
+                            const text = json.choices[0].delta?.content;
+                            const queue = encoder.encode(text);
+                            controller.enqueue(queue);
+                        } catch (e) {
+                            controller.error(e);
+                        }
+                    }
+                };
+                const parser = createParser(streamParser);
+                for await (const chunk of res.body as any) {
+                    parser.feed(decoder.decode(chunk));
+                }
+            },
+        });
+        stream.pipe(res);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+});
 
 app.post('/prompt', async (req, res) => {
 
