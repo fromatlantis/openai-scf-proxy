@@ -25,8 +25,8 @@ const limiter = rateLimit({
 
 // Parse request bodies as JSON
 app.use(bodyParser.json());
-app.use(limiter)
-app.use(cors());
+// app.use(limiter)
+// app.use(cors());
 
 app.post('/v1/chat/completions', async (req, res) => {
     try {
