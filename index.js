@@ -27,9 +27,9 @@ const limiter = rateLimit({
 
 
 // Parse request bodies as JSON
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 // app.use(limiter)
-app.use(cors());
+//app.use(cors());
 
 app.use('/', createProxyMiddleware({
   target: 'https://api.openai.com',
