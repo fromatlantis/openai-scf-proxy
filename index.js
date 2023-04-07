@@ -2,6 +2,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Configuration, OpenAIApi } = require("openai");
+const {
+  createProxyMiddleware
+} = require('http-proxy-middleware');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 
@@ -28,28 +31,41 @@ app.use(bodyParser.json());
 // app.use(limiter)
 app.use(cors());
 
-app.post('/v1/chat/completions', async (req, res) => {
-    try {
-      const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
-      // console.log(openaiRes.data.choices[0]);
-      // Response
-      // res.send('Hello world!\n');
-//       res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Type', 'application/octet-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
+app.use('/', createProxyMiddleware({
+  target: 'https://api.openai.com',
+  changeOrigin: true,
+  onProxyReq: (proxyReq, req, res) => {
+    // 移除 'x-forwarded-for' 和 'x-real-ip' 头，以确保不传递原始客户端 IP 地址等信息
+    proxyReq.removeHeader('x-forwarded-for');
+    proxyReq.removeHeader('x-real-ip');
+  },
+  onProxyRes: function (proxyRes, req, res) {
+    proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+  }
+}));
+
+// app.post('/v1/chat/completions', async (req, res) => {
+//     try {
+//       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
+//       // console.log(openaiRes.data.choices[0]);
+//       // Response
+//       // res.send('Hello world!\n');
+// //       res.setHeader('Content-Type', 'application/json');
+//         res.setHeader('Content-Type', 'application/octet-stream');
+//         res.setHeader('Cache-Control', 'no-cache');
+//         res.setHeader('Connection', 'keep-alive');
         
-      for await (const message of openaiRes.data) {
-          try {
-              res.send(message)
-          } catch (error) {
-            console.error("Could not JSON parse stream message", message, error);
-          }
-      }
-    } catch (error) {
-      res.status(500).send(error.message);
-    }
-});
+//       for await (const message of openaiRes.data) {
+//           try {
+//               res.send(message)
+//           } catch (error) {
+//             console.error("Could not JSON parse stream message", message, error);
+//           }
+//       }
+//     } catch (error) {
+//       res.status(500).send(error.message);
+//     }
+// });
 
 app.post('/prompt', async (req, res) => {
 
