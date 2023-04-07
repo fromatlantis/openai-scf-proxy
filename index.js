@@ -54,35 +54,10 @@ app.post('/v1/chat/completions', async (req, res) => {
       // Response
       // res.send('Hello world!\n');
 //       res.setHeader('Content-Type', 'application/json');
-       const encoder = new TextEncoder();
-        const decoder = new TextDecoder();
-        const stream = new ReadableStream({
-            async start(controller) {
-                const streamParser = (event) => {
-                    if (event.type === 'event') {
-                        const data = event.data;
-                        if (data === '[DONE]') {
-                            controller.close();
-                            return;
-                        }
-                        try {
-                            const json = JSON.parse(data);
-                            const text = json.choices[0].delta?.content;
-                            const queue = encoder.encode(text);
-                            controller.enqueue(queue);
-                        } catch (e) {
-                            controller.error(e);
-                        }
-                    }
-                };
-                const parser = createParser(streamParser);
-                for await (const chunk of openaiRes.data) {
-                    parser.feed(decoder.decode(chunk));
-                }
-            },
-        });
-        res.write(stream);
-      res.end;
+         for await (const chunk of openaiRes.data) {
+              res.write(chunk);
+              res.end();
+        }
     } catch (error) {
       res.status(500).send(error.message);
     }
