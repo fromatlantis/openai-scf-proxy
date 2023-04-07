@@ -63,7 +63,7 @@ app.post('/v1/chat/completions', async (req, res) => {
         for (const line of lines) {
             const message = line.replace(/^data: /, '');
             if (message === '[DONE]') {
-                res.end();
+                //res.end();
             }
             try {
                 //const parsed = JSON.parse(message);
