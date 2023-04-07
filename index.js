@@ -39,7 +39,9 @@ app.post('/v1/chat/completions', async (req, res) => {
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
       openaiRes.data.on('data', (data) => {
-       res.write(data);
+        for(const chunk of data) {
+            res.write(data);
+        }
         res.end();
       })
     } catch (error) {
