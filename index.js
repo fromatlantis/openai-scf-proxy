@@ -35,7 +35,7 @@ app.post('/v1/chat/completions', async (req, res) => {
       // Response
       // res.send('Hello world!\n');
 //       res.setHeader('Content-Type', 'application/json');
-       res.send(openaiRes);
+       openaiRes.pipe(res);
 //       openaiRes.data.on('data', (data) => {
 //         console.log(data)
 //            res.send(data);
