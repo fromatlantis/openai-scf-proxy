@@ -56,37 +56,37 @@ app.post('/v1/chat/completions', async (req, res) => {
       openaiRes.data.on('data', (data) => {
         console.log(data);
         res.send(data);
-          try {
-            // 对每次推送的数据进行格式化, 得到的是 JSON 字符串、或者 [DONE] 表示流结束
-            const message = data
-              .toString()
-              .trim()
-              .replace(/^data: /, '');
-              console.log(message);
-            // 流结束
-            if (message === '[DONE]') {
-              stream.write('data: [DONE]\n\n');
-              return;
-            }
+//           try {
+//             // 对每次推送的数据进行格式化, 得到的是 JSON 字符串、或者 [DONE] 表示流结束
+//             const message = data
+//               .toString()
+//               .trim()
+//               .replace(/^data: /, '');
+//               console.log(message);
+//             // 流结束
+//             if (message === '[DONE]') {
+//               stream.write('data: [DONE]\n\n');
+//               return;
+//             }
 
-            // 解析数据
-            const parsed = JSON.parse(message);
+//             // 解析数据
+//             const parsed = JSON.parse(message);
 
-            // 写入流
-            stream.write(`data: ${parsed || ''}\n\n`);
-          } catch (e) {
-            // 出现错误, 结束流
-            stream.write('data: [DONE]\n\n');
-          }
+//             // 写入流
+//             stream.write(`data: ${parsed || ''}\n\n`);
+//           } catch (e) {
+//             // 出现错误, 结束流
+//             stream.write('data: [DONE]\n\n');
+//           }
       });
-      res.set({
-        'Connection': 'keep-alive',
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'text/event-stream',
-      });
+//       res.set({
+//         'Connection': 'keep-alive',
+//         'Cache-Control': 'no-cache',
+//         'Content-Type': 'text/event-stream',
+//       });
 
-      res.status(200);
-      stream.pipe(res);   
+//       res.status(200);
+//       stream.pipe(res);   
     } catch (error) {
       res.status(500).send(error.message);
     }
