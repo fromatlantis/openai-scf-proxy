@@ -58,30 +58,7 @@ app.post('/v1/chat/completions', async (req, res) => {
 //               res.write(chunk);
 //               res.end();
 //         }  
-       const resf = await fetch(`https://api.openai.com/v1/chat/completions`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-            },
-            method: 'POST',
-            body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: 'hello',
-                temperature: 0.5,
-                // max_tokens: 4096 - tokens,
-                stream: true,
-            }),
-        }).catch((err) => {
-            return new Response(
-                JSON.stringify({
-                    error: {
-                        message: err.message,
-                    },
-                }),
-                { status: 500 },
-            );
-        });
-        resf.pipe(res)
+      res.send(openaiRes.data);
     } catch (error) {
       res.status(500).send(error.message);
     }
