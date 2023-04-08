@@ -11,7 +11,7 @@ const { createParser } =  require('eventsource-parser');
 
 const { PassThrough } = require('stream');
 
-const { OpenAI } = require("openai-streams/node");
+import { OpenAI } from "openai-streams/node";
 
 const cors = require('cors');
 
