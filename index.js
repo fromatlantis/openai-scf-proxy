@@ -77,6 +77,7 @@ app.post('/v1/chat/completions', async (req, res) => {
                 }
             },
         });
+      console.log(stream);
         const reader = stream.getReader();
       // 处理流动
   function read() {
@@ -84,7 +85,7 @@ app.post('/v1/chat/completions', async (req, res) => {
       if (done) {
         return;
       }
-      console.log(value)
+      //console.log(value)
       // 将数据写入响应中
       res.write(value);
 
