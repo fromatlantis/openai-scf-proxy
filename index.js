@@ -44,7 +44,6 @@ const limiter = rateLimit({
 //   }
 // }));
 
-console.log('/')
 app.get('/', function(req, res) {
   console.log('first')
   res.send('Hello World!');
