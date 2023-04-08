@@ -84,7 +84,7 @@ app.post('/v1/chat/completions', async (req, res) => {
       if (done) {
         return;
       }
-
+      console.log(value)
       // 将数据写入响应中
       res.write(value);
 
