@@ -60,7 +60,7 @@ app.post('/v1/chat/completions', async (req, res) => {
               .toString()
               .trim()
               .replace(/^data: /, '');
-
+              console.log(message);
             // 流结束
             if (message === '[DONE]') {
               stream.write('data: [DONE]\n\n');
@@ -71,7 +71,7 @@ app.post('/v1/chat/completions', async (req, res) => {
             const parsed = JSON.parse(message);
 
             // 写入流
-            stream.write(`data: ${parsed.choices[0].delta.content || ''}\n\n`);
+            stream.write(`data: ${parsed || ''}\n\n`);
           } catch (e) {
             // 出现错误, 结束流
             stream.write('data: [DONE]\n\n');
