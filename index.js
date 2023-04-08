@@ -86,7 +86,14 @@ app.post('/v1/chat/completions', async (req, res) => {
       res.status(500).send(error.message);
     }
 });
-
+app.post('/v1/chat/completions', async (req, res) => {
+    try {
+        const openaiRes = await openaiClient.createImage(req.body);
+        res.send(openaiRes)
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+});
 app.post('/prompt', async (req, res) => {
 
   const promptParams = req.body;
