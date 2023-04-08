@@ -75,7 +75,8 @@ app.post('/v1/chat/completions', async (req, res) => {
           } catch (e) {
             // 出现错误, 结束流
             stream.write('data: [DONE]\n\n');
-      }
+          }
+      });
       res.status(200);
       stream.pipe(res);   
     } catch (error) {
