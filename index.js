@@ -53,6 +53,14 @@ app.post('/v1/chat/completions', async (req, res) => {
     try {
       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
       const stream = new PassThrough();
+      res.set({
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'text/event-stream',
+      });
+
+      res.status(200);
+      stream.pipe(res);  
       //const writable = new require('stream').Writable();
       openaiRes.data.on('data', (data) => {
         //console.log(data.toString());
@@ -79,15 +87,7 @@ app.post('/v1/chat/completions', async (req, res) => {
             // 出现错误, 结束流
             stream.write('data: [DONE]\n\n');
           }
-      });
-//       res.set({
-//         'Connection': 'keep-alive',
-//         'Cache-Control': 'no-cache',
-//         'Content-Type': 'text/event-stream',
-//       });
-
-       res.status(200);
-       stream.pipe(res);   
+      }); 
     } catch (error) {
       res.status(500).send(error.message);
     }
