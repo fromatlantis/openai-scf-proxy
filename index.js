@@ -43,7 +43,9 @@ const limiter = rateLimit({
 //     proxyRes.headers['Access-Control-Allow-Origin'] = '*';
 //   }
 // }));
-
+app.get('hello', (req, res)=> {
+  res.send('world');
+})
 app.post('/v1/chat/completions', async (req, res) => {
     try {
         const options = {
