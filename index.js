@@ -53,7 +53,7 @@ app.post('/v1/chat/completions', async (req, res) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            "Authorization":"Bearer "  
+            "Authorization":`Bearer ${process.env.OPENAI_API_KEY}`  
           }
         };
 
