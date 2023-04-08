@@ -43,6 +43,9 @@ const limiter = rateLimit({
 //     proxyRes.headers['Access-Control-Allow-Origin'] = '*';
 //   }
 // }));
+app.get('/', function(req, res) {
+  res.send('Hello World!');
+});
 app.get('/hello', (req, res)=> {
   res.send('world');
 })
