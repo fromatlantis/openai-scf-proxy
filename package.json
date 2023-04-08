@@ -13,6 +13,7 @@
     "express-rate-limit": "*",
     "cors": "*",
     "http-proxy-middleware": "*",
-    "eventsource-parser": "*"
+    "eventsource-parser": "*",
+    "openai-streams": "*"
   }
 }
