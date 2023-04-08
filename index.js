@@ -7,6 +7,7 @@ import { createParser } from 'eventsource-parser';
 import { PassThrough } from 'stream';
 import { OpenAI } from 'openai-streams/node';
 import cors from 'cors';
+import https from 'https';
 
 // Init
 const app = express();
@@ -45,15 +46,39 @@ app.use(bodyParser.json());
 
 app.post('/v1/chat/completions', async (req, res) => {
     try {
+        const options = {
+          hostname: 'api.openai.com',
+          port: 443,
+          path: '/v1/chat/completions',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization":"Bearer "  
+          }
+        };
+
+        const proxyReq = https.request(options, (proxyRes) => {
+          res.writeHead(proxyRes.statusCode, proxyRes.headers);
+          proxyRes.pipe(res);
+        });
+
+        proxyReq.on('error', (err) => {
+          console.error(err);
+          res.statusCode = 500;
+          res.end('Internal Server Error');
+        });
+
+        req.pipe(proxyReq);
+      
       //res.send('hello')
-      const stream = await OpenAI(
-        "completions",
-        {
-          model: "text-davinci-003",
-          prompt: "Write a happy sentence.\n\n",
-          max_tokens: 25
-        }
-      );
+//       const stream = await OpenAI(
+//         "completions",
+//         {
+//           model: "text-davinci-003",
+//           prompt: "Write a happy sentence.\n\n",
+//           max_tokens: 25
+//         }
+//       );
 
 //   stream.pipe(res);
 //       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
