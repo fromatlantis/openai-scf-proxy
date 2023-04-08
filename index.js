@@ -99,7 +99,7 @@ app.post('/v1/chat/completions', async (req, res) => {
 //             // 出现错误, 结束流
 //             stream.write('data: [DONE]\n\n');
 //           }
-      }); 
+     // }); 
     } catch (error) {
       res.status(500).send(error.message);
     }
