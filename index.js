@@ -9,6 +9,8 @@ const rateLimit = require('express-rate-limit');
 
 const { createParser } =  require('eventsource-parser');
 
+import { PassThrough } from 'stream';
+
 const cors = require('cors');
 
 
@@ -50,47 +52,38 @@ app.use(bodyParser.json());
 app.post('/v1/chat/completions', async (req, res) => {
     try {
       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
-      const encoder = new TextEncoder();
-      const decoder = new TextDecoder();
-      const stream = new ReadableStream({
-            async start(controller) {
-                const streamParser = (event) => {
-                    if (event.type === 'event') {
-                        const data = event.data;
-                        if (data === '[DONE]') {
-                            controller.close();
-                            return;
-                        }
-                        try {
-                            const json = JSON.parse(data);
-                            const text = json.choices[0].delta?.content;
-                            const queue = encoder.encode(text);
-                            controller.enqueue(queue);
-                        } catch (e) {
-                            controller.error(e);
-                        }
-                    }
-                };
-                const parser = createParser(streamParser);
-                for await (const chunk of openaiRes.data) {
-                    parser.feed(decoder.decode(chunk));
-                }
-            },
-        });
-      console.log(stream);
-        const reader = stream.getReader();
-      // 处理流动
-  function read() {
-    reader.read().then(({ done, value }) => {
-      if (done) {
+      const stream = new PassThrough();
+      completion.data.on('data', (data) => {
+    try {
+      // 对每次推送的数据进行格式化, 得到的是 JSON 字符串、或者 [DONE] 表示流结束
+      const message = data
+        .toString()
+        .trim()
+        .replace(/^data: /, '');
+
+      // 流结束
+      if (message === '[DONE]') {
+        stream.write('data: [DONE]\n\n');
         return;
       }
-      //console.log(value)
-      // 将数据写入响应中
-      res.write(value);
 
-      // 继续读取流中的数据
-      read();
+      // 解析数据
+      const parsed = JSON.parse(message);
+
+      // 写入流
+      stream.write(`data: ${parsed.choices[0].delta.content || ''}\n\n`);
+    } catch (e) {
+      // 出现错误, 结束流
+      stream.write('data: [DONE]\n\n');
+    }
+     res.status(200);
+stream.pipe(res);   
+  });
+
+作者：墨渊君
+链接：https://juejin.cn/post/7212270321622286394
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
     });
   }
 read();
