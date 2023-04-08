@@ -88,8 +88,9 @@ app.post('/v1/chat/completions', async (req, res) => {
 });
 app.post('/v1/images/generations', async (req, res) => {
     try {
+      console.log(req.body)
         const openaiRes = await openaiClient.createImage(req.body);
-        res.send(openaiRes)
+        res.send(openaiRes);
     } catch (error) {
       res.status(500).send(error.message);
     }
