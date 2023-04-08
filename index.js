@@ -54,39 +54,30 @@ app.post('/v1/chat/completions', async (req, res) => {
       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
       const stream = new PassThrough();
       completion.data.on('data', (data) => {
-    try {
-      // 对每次推送的数据进行格式化, 得到的是 JSON 字符串、或者 [DONE] 表示流结束
-      const message = data
-        .toString()
-        .trim()
-        .replace(/^data: /, '');
+          try {
+            // 对每次推送的数据进行格式化, 得到的是 JSON 字符串、或者 [DONE] 表示流结束
+            const message = data
+              .toString()
+              .trim()
+              .replace(/^data: /, '');
 
-      // 流结束
-      if (message === '[DONE]') {
-        stream.write('data: [DONE]\n\n');
-        return;
+            // 流结束
+            if (message === '[DONE]') {
+              stream.write('data: [DONE]\n\n');
+              return;
+            }
+
+            // 解析数据
+            const parsed = JSON.parse(message);
+
+            // 写入流
+            stream.write(`data: ${parsed.choices[0].delta.content || ''}\n\n`);
+          } catch (e) {
+            // 出现错误, 结束流
+            stream.write('data: [DONE]\n\n');
       }
-
-      // 解析数据
-      const parsed = JSON.parse(message);
-
-      // 写入流
-      stream.write(`data: ${parsed.choices[0].delta.content || ''}\n\n`);
-    } catch (e) {
-      // 出现错误, 结束流
-      stream.write('data: [DONE]\n\n');
-    }
-     res.status(200);
-stream.pipe(res);   
-  });
-
-作者：墨渊君
-链接：https://juejin.cn/post/7212270321622286394
-来源：稀土掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-    });
-  }
-read();
+      res.status(200);
+      stream.pipe(res);   
     } catch (error) {
       res.status(500).send(error.message);
     }
