@@ -59,7 +59,13 @@ app.post('/v1/chat/completions', async (req, res) => {
 
         const proxyReq = https.request(options, (proxyRes) => {
           res.writeHead(proxyRes.statusCode, proxyRes.headers);
-          proxyRes.pipe(res);
+         
+          proxyRes.on('data', (chunk) => {
+              chunk.pipe(res);
+          });
+          proxyRes.on('end', () => {
+            console.log('No more data in response.');
+          });
         });
 
         proxyReq.on('error', (err) => {
