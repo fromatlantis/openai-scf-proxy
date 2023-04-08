@@ -9,7 +9,7 @@ const rateLimit = require('express-rate-limit');
 
 const { createParser } =  require('eventsource-parser');
 
-import { PassThrough } from 'stream';
+const { PassThrough } = require('stream');
 
 const cors = require('cors');
 
