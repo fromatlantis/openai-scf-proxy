@@ -88,12 +88,12 @@ app.post('/v1/chat/completions', async (req, res) => {
 });
 app.post('/v1/images/generations', async (req, res) => {
     try {
-      console.log(req.body)
         const openaiRes = await openaiClient.createImage({
           "prompt": "A cute baby sea otter",
           "n": 1,
           "size": "256x256"
         });
+        console.log(openaiRes);
         res.send(openaiRes);
     } catch (error) {
       res.status(500).send(error.message);
