@@ -50,21 +50,34 @@ app.use(bodyParser.json());
 app.post('/v1/chat/completions', async (req, res) => {
     try {
       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
-      // console.log(openaiRes.data.choices[0]);
-      // Response
-      // res.send('Hello world!\n');
-//       res.setHeader('Content-Type', 'application/json');
-//          for await (const chunk of openaiRes.data) {
-//               res.write(chunk);
-//               res.end();
-//         }  
-      //res.send(openaiRes.data);
-      openaiRes.data.on('data', data => {
-         console.log(data.length)
-        res.write(data)
-//         data.pipe(res);
-      })
-//       openaiRes.data.pipe(res);
+      const encoder = new TextEncoder();
+      const decoder = new TextDecoder();
+      const stream = new ReadableStream({
+            async start(controller) {
+                const streamParser = (event) => {
+                    if (event.type === 'event') {
+                        const data = event.data;
+                        if (data === '[DONE]') {
+                            controller.close();
+                            return;
+                        }
+                        try {
+                            const json = JSON.parse(data);
+                            const text = json.choices[0].delta?.content;
+                            const queue = encoder.encode(text);
+                            controller.enqueue(queue);
+                        } catch (e) {
+                            controller.error(e);
+                        }
+                    }
+                };
+                const parser = createParser(streamParser);
+                for await (const chunk of openaiRes.data) {
+                    parser.feed(decoder.decode(chunk));
+                }
+            },
+        });
+        stream.pipe(res);
     } catch (error) {
       res.status(500).send(error.message);
     }
