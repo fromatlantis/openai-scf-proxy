@@ -62,7 +62,7 @@ app.post('/v1/chat/completions', async (req, res) => {
       openaiRes.data.on('data', data => {
 //          console.log(data.toString())
 //         res.send(data)
-        date.pipe(res);
+        data.pipe(res);
       })
 //       openaiRes.data.pipe(res);
     } catch (error) {
