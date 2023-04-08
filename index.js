@@ -44,17 +44,16 @@ app.use(bodyParser.json());
 // }));
 
 app.post('/v1/chat/completions', async (req, res) => {
-  res.send('hello')
     try {
       res.send('hello')
 //       const stream = await OpenAI(
-//     "completions",
-//     {
-//       model: "text-davinci-003",
-//       prompt: "Write a happy sentence.\n\n",
-//       max_tokens: 25
-//     }
-  );
+  //     "completions",
+  //     {
+  //       model: "text-davinci-003",
+  //       prompt: "Write a happy sentence.\n\n",
+  //       max_tokens: 25
+  //     }
+  //   );
 
 //   stream.pipe(res);
 //       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
