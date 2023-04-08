@@ -93,8 +93,8 @@ app.post('/v1/images/generations', async (req, res) => {
           "n": 1,
           "size": "256x256"
         });
-        console.log(openaiRes);
-        res.send(openaiRes);
+        console.log(openaiRes.data);
+        res.send(openaiRes.data);
     } catch (error) {
       res.status(500).send(error.message);
     }
