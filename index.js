@@ -45,7 +45,8 @@ app.use(bodyParser.json());
 
 app.post('/v1/chat/completions', async (req, res) => {
   res.send('hello')
-//     try {
+    try {
+      res.send('hello')
 //       const stream = await OpenAI(
 //     "completions",
 //     {
@@ -53,7 +54,7 @@ app.post('/v1/chat/completions', async (req, res) => {
 //       prompt: "Write a happy sentence.\n\n",
 //       max_tokens: 25
 //     }
-//   );
+  );
 
 //   stream.pipe(res);
 //       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
