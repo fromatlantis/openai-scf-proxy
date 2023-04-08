@@ -54,6 +54,7 @@ app.post('/v1/chat/completions', async (req, res) => {
       const openaiRes = await openaiClient.createChatCompletion(req.body, { responseType: 'stream' });
       const stream = new PassThrough();
       openaiRes.data.on('data', (data) => {
+        console.log(data);
           try {
             // 对每次推送的数据进行格式化, 得到的是 JSON 字符串、或者 [DONE] 表示流结束
             const message = data
