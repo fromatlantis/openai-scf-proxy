@@ -7,7 +7,7 @@ import { createParser } from 'eventsource-parser';
 import { PassThrough } from 'stream';
 import { OpenAI } from 'openai-streams/node';
 import cors from 'cors';
-import http from 'http';
+import https from 'https';
 
 // Init
 const app = express();
@@ -27,7 +27,7 @@ const limiter = rateLimit({
 
 
 // Parse request bodies as JSON
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 // app.use(limiter)
 //app.use(cors());
 
@@ -57,7 +57,7 @@ app.post('/v1/chat/completions', async (req, res) => {
           }
         };
 
-        const proxyReq = http.request(options, (proxyRes) => {
+        const proxyReq = https.request(options, (proxyRes) => {
           res.writeHead(proxyRes.statusCode, proxyRes.headers);
           proxyRes.pipe(res);
         });
