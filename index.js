@@ -58,7 +58,11 @@ app.post('/v1/chat/completions', async (req, res) => {
 //               res.write(chunk);
 //               res.end();
 //         }  
-      res.send(openaiRes.data);
+      //res.send(openaiRes.data);
+      openaiRes.data.on('data', data => {
+         console.log(data.toString())
+        res.send(data)
+      })
     } catch (error) {
       res.status(500).send(error.message);
     }
