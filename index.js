@@ -1,20 +1,12 @@
-
-const express = require('express');
-const bodyParser = require('body-parser');
-const { Configuration, OpenAIApi } = require("openai");
-const {
-  createProxyMiddleware
-} = require('http-proxy-middleware');
-const rateLimit = require('express-rate-limit');
-
-const { createParser } =  require('eventsource-parser');
-
-const { PassThrough } = require('stream');
-
-import { OpenAI } from "openai-streams/node";
-
-const cors = require('cors');
-
+import express from 'express';
+import bodyParser from 'body-parser';
+import { Configuration, OpenAIApi } from 'openai';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import rateLimit from 'express-rate-limit';
+import { createParser } from 'eventsource-parser';
+import { PassThrough } from 'stream';
+import { OpenAI } from 'openai-streams/node';
+import cors from 'cors';
 
 // Init
 const app = express();
