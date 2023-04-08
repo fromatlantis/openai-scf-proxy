@@ -77,7 +77,22 @@ app.post('/v1/chat/completions', async (req, res) => {
                 }
             },
         });
-        stream.pipe(res);
+        const reader = stream.getReader();
+      // 处理流动
+  function read() {
+    reader.read().then(({ done, value }) => {
+      if (done) {
+        return;
+      }
+
+      // 将数据写入响应中
+      res.write(value);
+
+      // 继续读取流中的数据
+      read();
+    });
+  }
+read();
     } catch (error) {
       res.status(500).send(error.message);
     }
